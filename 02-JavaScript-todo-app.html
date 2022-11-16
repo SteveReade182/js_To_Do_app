@@ -90,6 +90,25 @@
         myyList.removeChild(li);
     }
 
+    // add list elements with a delete button
+
+    function newTodo(){
+        var inputVal = document.getElementById("todoTitle").value;
+        var listItem = document.createElement("li");
+        listItem.appendChild(
+            document.createTextNode(inputVal)
+        );
+        var deleteLink = document.createElement("a");   //delete buttons
+
+        deleteLink.href = "#";
+        deleteLink.className = "btn btn-sm btn-danger m-1 delete";  //bootstrap styling
+        deleteLink.appendChild(
+            document.createTextNode("Delete")
+        );
+        listItem.appendChild(deleteLink);
+        myyList.appendChild(listItem);
+    }
+
 </script>
 
 
