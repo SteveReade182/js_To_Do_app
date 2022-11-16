@@ -29,84 +29,80 @@
 </html>
 
 <script>
-    var json_data = [
+    /*var json_data = [
         {
-            "userId": 1,
-            "id": 1,
-            "title": "delectus aut autem",
-            "completed": false
-        },
-        {
-            "userId": 1,
-            "id": 2,
-            "title": "quis ut nam facilis et officia qui",
-            "completed": false
-        },
-        {
-            "userId": 1,
-            "id": 3,
-            "title": "fugiat veniam minus",
-            "completed": false
-        },
-        {
-            "userId": 1,
-            "id": 4,
-            "title": "et porro tempora",
-            "completed": true
-        },
-        {
-            "userId": 1,
-            "id": 5,
-            "title": "laboriosam mollitia et enim quasi asipisci quia provident illum",
+            "title": "sample todo item",
             "completed": false
         }
-    ];
-    var myyList = document.getElementById("todo-list");
+    ];*/ // now an empty array as below functions both add and delete items!
 
-    json_data.forEach(element => {
-        var listItem = document.createElement("li");    //creates list item
-        listItem.appendChild(
-            document.createTextNode(element.title)
-        );
-        var deleteLink = document.createElement("a");   //delete buttons
+    var json_data = JSON.parse( localStorage.getItem('json_data'));
+    var myList = document.getElementById("todo-list");
 
-        deleteLink.href = "#";
-        deleteLink.className = "btn btn-sm btn-danger m-1 delete";  //bootstrap styling
-        deleteLink.appendChild(
-            document.createTextNode("Delete")
-        );
-        listItem.appendChild(deleteLink);
-        myyList.appendChild(listItem);
-    });
+    if (json_data) {
+        json_data.forEach(element => {
+            newTodo(element.title);
+        });
+    }
 
     //event listeners below - activates when a delete button is pressed
+    registerEventListeners();
 
-    var closeButtons = document.getElementsByClassName("delete");
-    for (var i = 0; i < closeButtons.length; i++){
-        closeButtons[i].addEventListener('click', deleteTodo, false);
+    function registerEventListeners() {
+        var closeButtons = document.getElementsByClassName("delete");
+        for (var i = 0; i < closeButtons.length; i++) {
+            closeButtons[i].addEventListener('click', deleteTodo, false);
+        }
     }
-    function deleteTodo(){
+
+    function deleteTodo() {
         var li = this.parentElement;
-        myyList.removeChild(li);
+        myList.removeChild(li);
+        console.log("deleted li item") // i added to see if console worked when deleting... it does!
     }
 
     // add list elements with a delete button
 
-    function newTodo(){
-        var inputVal = document.getElementById("todoTitle").value;
+    function newTodo(todoTitle) {
+        if (!todoTitle) {
+            todoTitle = document.getElementById("todoTitle").value;
+            storeTodoLocal(todoTitle);
+
+        }
         var listItem = document.createElement("li");
         listItem.appendChild(
-            document.createTextNode(inputVal)
+            document.createTextNode(todoTitle)
         );
         var deleteLink = document.createElement("a");   //delete buttons
-
         deleteLink.href = "#";
         deleteLink.className = "btn btn-sm btn-danger m-1 delete";  //bootstrap styling
         deleteLink.appendChild(
             document.createTextNode("Delete")
         );
         listItem.appendChild(deleteLink);
-        myyList.appendChild(listItem);
+        myList.appendChild(listItem);
+        registerEventListeners();
+        console.log("new todo added");
+        console.log(listItem);
+    }
+
+    function storeTodoLocal(todoTitle) {
+        // retrieve and parse existing JSON from localstorage
+        var json_temp = JSON.parse( localStorage.getItem('json|_data'));
+        if (!json_temp) {
+            json_temp = [];
+        }
+        // add new todo object to JSON
+        json_temp.push({
+            "title": todoTitle,
+            "completed": false
+        })
+        // log updated JSON to console
+        console.log(json_temp)
+        // stringify updated JSON and store back in localStorage
+        localStorage.setItem('json_data',
+            JSON.stringify(json_temp)
+        );
     }
 
 </script>
